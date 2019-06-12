@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import FileUploader from 'react-firebase-file-uploader'
 import firebase from './firebase.js'  
+import MySubmittedTable from "./Components/MySubmittedTable.js";
 
 class StudentView extends Component {
 
@@ -46,6 +47,7 @@ class StudentView extends Component {
                     onUploadError={this.handleUploadError}
                     onProgress={this.handleProgress}
                 />
+                <MySubmittedTable />
             </div>
         )
     }
