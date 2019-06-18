@@ -14,10 +14,11 @@ class PDEReader extends React.Component {
 
     componentDidUpdate = (prevProps, prevState) => {
         if (prevProps.file !== this.props.file) {
+            // Should do code highlighting, not sure why it's not working
             Prism.highlightAll();
-            // const path = require("../Circle.pde")
+
+            // Gets url as prop from clicked link in StudentView
             const url = this.props.file
-            console.log('Url:' + url)
             fetch(url, {
                 method: 'GET',
                 mode: 'cors'

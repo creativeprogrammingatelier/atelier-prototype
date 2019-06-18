@@ -5,6 +5,7 @@ import PDEReader from './Components/PDEReader'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faEye } from '@fortawesome/free-solid-svg-icons'
+import Moment from 'react-moment';
 library.add(faEye)
 
 class StudentView extends Component {
@@ -16,18 +17,26 @@ class StudentView extends Component {
             fileURL: '',
             progress: 0,
             items: [],
-            viewedFileURL: ''
+            viewedFileURL: '',
+            sNum: ''
         }
 
-        // This binding is necessary to make `this` work in the callback
         this.handleLinkClick = this.handleLinkClick.bind(this);
     }
 
-    storageRef = firebase.storage().ref('code');
-    dbRef = firebase.firestore().collection('codeFileRefs')
+    // sNum = 's1234569'
+    sNum = 's1'
+    storageRef = firebase.storage().ref(this.sNum);
+    userFilesRef = firebase.firestore().collection('users').doc(this.sNum).collection('codeFileRefs')
+    usersRef = firebase.firestore().collection('users').doc(this.sNum)
 
     componentWillMount() {
-        this.dbRef.onSnapshot(querySnapshot => {
+        this.setState({
+            sNum: this.sNum,
+        })
+
+        //List all items of the user, according to the references in firestore
+        this.userFilesRef.onSnapshot(querySnapshot => {
             var items = querySnapshot.docs.map(function (documentSnapshot) {
                 return documentSnapshot.data();
             });
@@ -36,7 +45,8 @@ class StudentView extends Component {
                 newState.push({
                     id: item,
                     title: items[item].filename,
-                    fileURL: items[item].fileURL
+                    fileURL: items[item].fileURL,
+                    timestamp: items[item].timestamp
                 });
             }
             this.setState({
@@ -60,22 +70,29 @@ class StudentView extends Component {
     };
 
     handleUploadSuccess = filename => {
+
+        // If a document for this user does not exist yet, create it
+        this.usersRef.set({snum: true}, {merge: true}) 
+    
         this.setState({
             filename: filename,
             progress: 100
         })
+        // Add a reference to this file in the database
         this.storageRef.child(filename).getDownloadURL()
             .then(url => {
                 this.setState({
                     fileURL: url
                 })
-                this.dbRef.add({
+                this.userFilesRef.add({
                     filename: filename,
-                    fileURL: url
+                    fileURL: url,
+                    timestamp: Date.now()
                 })
             })
     }
 
+    // This state change is passed to the PDEReader
     handleLinkClick = (e, fileURL) => {
         this.setState({
             viewedFileURL: fileURL,
@@ -83,10 +100,9 @@ class StudentView extends Component {
     }
 
     render() {
-        console.log(this.state)
         return (
             <div>
-                <h2>Welcome, student</h2>
+                <h2>Welcome, {this.state.sNum}</h2>
                 <label style={{ padding: 10, borderRadius: 4, pointer: 'cursor' }}>
                     <FileUploader
                         name='file'
@@ -103,6 +119,7 @@ class StudentView extends Component {
                             <tr>
                                 <th scope="col">File name</th>
                                 <th scope="col">Download</th>
+                                <th scope="col">Uploaded</th>
                                 <th scope="col">View</th>
                             </tr>
                         </thead>
@@ -112,6 +129,7 @@ class StudentView extends Component {
                                     <tr>
                                         <td>{item.title}</td>
                                         <td><a href={item.fileURL}>Download link</a></td>
+                                        <td><Moment>{item.timestamp}</Moment></td>
                                         <td><FontAwesomeIcon icon="eye" onClick={(e) => this.handleLinkClick(e, item.fileURL)} /></td>
                                     </tr>)
                             })}
@@ -120,7 +138,7 @@ class StudentView extends Component {
 
                 </div>
 
-                <PDEReader file={this.state.viewedFileURL}/>
+                <PDEReader file={this.state.viewedFileURL} />
 
             </div>
         )
