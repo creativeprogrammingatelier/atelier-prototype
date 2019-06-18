@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Prism from "prismjs";
 import "../stylesheets/prism.css";
 
 class PDEReader extends React.Component {
@@ -6,18 +7,24 @@ class PDEReader extends React.Component {
     constructor() {
         super();
         this.state = {
+            PDEReaderURL: '',
             code: ''
         }
     }
 
-    componentDidMount = () => {
+    componentDidUpdate = () => {
         Prism.highlightAll();
-
-        const path = require("../Circle.pde")
-        fetch(path).then(response => {
+        // const path = require("../Circle.pde")
+        const url = this.props.file
+        console.log('Url:'+url)
+        fetch(url, {
+            method: 'GET',
+            mode: 'cors'
+        }).then(response => {
+            console.log(response)
             response.text().then((text) => {
-                console.log(text)
                 this.setState({
+                    PDEReaderURL: url,
                     code: text,
                 })
             })
@@ -27,13 +34,9 @@ class PDEReader extends React.Component {
     render() {
         return (
             <div>
-                {/* <div>
-                    {this.props.file}
-                </div> */}
-                <pre>
+                <pre className="line-numbers">
                     <code className="language-processing">
-                    {this.state.code}
-                        {/* {this.state.code} */}
+                            {this.state.code}
                     </code>
                 </pre>
             </div>
