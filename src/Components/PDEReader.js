@@ -12,23 +12,25 @@ class PDEReader extends React.Component {
         }
     }
 
-    componentDidUpdate = () => {
-        Prism.highlightAll();
-        // const path = require("../Circle.pde")
-        const url = this.props.file
-        console.log('Url:'+url)
-        fetch(url, {
-            method: 'GET',
-            mode: 'cors'
-        }).then(response => {
-            console.log(response)
-            response.text().then((text) => {
-                this.setState({
-                    PDEReaderURL: url,
-                    code: text,
+    componentDidUpdate = (prevProps, prevState) => {
+        if (prevProps.file !== this.props.file) {
+            Prism.highlightAll();
+            // const path = require("../Circle.pde")
+            const url = this.props.file
+            console.log('Url:' + url)
+            fetch(url, {
+                method: 'GET',
+                mode: 'cors'
+            }).then(response => {
+                console.log(response)
+                response.text().then((text) => {
+                    this.setState({
+                        PDEReaderURL: url,
+                        code: text,
+                    })
                 })
             })
-        })
+        }
     }
 
     render() {
@@ -36,7 +38,7 @@ class PDEReader extends React.Component {
             <div>
                 <pre className="line-numbers">
                     <code className="language-processing">
-                            {this.state.code}
+                        {this.state.code}
                     </code>
                 </pre>
             </div>
