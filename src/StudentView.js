@@ -124,7 +124,7 @@ class StudentView extends Component {
                                 <th scope="col">File name</th>
                                 <th scope="col">Download</th>
                                 <th scope="col">Uploaded</th>
-                                <th scope="col">Comments</th>
+                                <th scope="col">Feedback received</th>
                                 <th scope="col">View</th>
                             </tr>
                         </thead>
@@ -134,8 +134,8 @@ class StudentView extends Component {
                                     <tr>
                                         <td>{item.title}</td>
                                         <td><a href={item.fileURL}>Download link</a></td>
-                                        <td><Moment>{item.timestamp}</Moment></td>
-                                        <td>0</td>
+                                        <td><Moment format="YYYY/MM/DD">{item.timestamp}</Moment></td>
+                                        <td><Moment format="YYYY/MM/DD">{item.timestamp}</Moment></td>
                                         <td><FontAwesomeIcon icon="eye" onClick={(e) => this.handleLinkClick(e, item.fileURL, item.title)} /></td>
                                     </tr>)
                             })}

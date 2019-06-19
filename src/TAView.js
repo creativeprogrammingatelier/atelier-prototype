@@ -83,6 +83,7 @@ class TAView extends Component {
                                 <th scope="col">File name</th>
                                 <th scope="col">Download</th>
                                 <th scope="col">Uploaded</th>
+                                <th scope="col">Last reviewed</th>
                                 <th scope="col">View</th>
                             </tr>
                         </thead>
@@ -93,7 +94,8 @@ class TAView extends Component {
                                         <td>{item.sNum}</td>
                                         <td>{item.title}</td>
                                         <td><a href={item.fileURL}>Download link</a></td>
-                                        <td><Moment>{item.timestamp}</Moment></td>
+                                        <td><Moment format="YYYY/MM/DD">{item.timestamp}</Moment></td>
+                                        <td><Moment format="YYYY/MM/DD">{item.timestamp}</Moment></td>
                                         <td><FontAwesomeIcon icon="eye" onClick={(e) => this.handleLinkClick(e, item.fileURL, item.title)} /></td>
                                     </tr>)
                             })}
