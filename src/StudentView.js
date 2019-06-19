@@ -4,7 +4,7 @@ import firebase from './firebase.js'
 import PDEReader from './Components/PDEReader'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faEye } from '@fortawesome/free-solid-svg-icons'
+import { faEye, faSearch } from '@fortawesome/free-solid-svg-icons'
 import Moment from 'react-moment';
 library.add(faEye)
 
@@ -18,6 +18,8 @@ class StudentView extends Component {
             progress: 0,
             items: [],
             viewedFileURL: '',
+            viewFileName: '',
+            viewingCode: false,
             sNum: ''
         }
 
@@ -96,7 +98,8 @@ class StudentView extends Component {
     handleLinkClick = (e, fileURL, title) => {
         this.setState({
             viewedFileURL: fileURL,
-            viewFileName: title
+            viewFileName: title,
+            viewingCode: true
         })
     }
 
@@ -140,7 +143,7 @@ class StudentView extends Component {
                     </table>
 
                 </div>
-                {this.state.viewedFileURL!='' &&
+                {this.state.viewingCode &&
                             <PDEReader
                             file={this.state.viewedFileURL}
                             name={this.state.viewFileName}

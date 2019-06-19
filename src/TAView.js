@@ -18,7 +18,8 @@ class TAView extends Component {
             fileURL: '',
             items: [],
             viewedFileURL: '',
-            viewdFileName: ''
+            viewdFileName: '',
+            viewingCode: false,
         }
 
         this.handleLinkClick = this.handleLinkClick.bind(this);
@@ -57,7 +58,8 @@ class TAView extends Component {
     handleLinkClick = (e, fileURL, title) => {
         this.setState({
             viewedFileURL: fileURL,
-            viewFileName: title
+            viewFileName: title,
+            viewingCode: true
         })
     }
 
@@ -99,7 +101,7 @@ class TAView extends Component {
                     </table>
                 </div>
 
-                {this.state.viewedFileURL!='' &&
+                {this.state.viewingCode &&
                             <PDEReader
                             file={this.state.viewedFileURL}
                             name={this.state.viewFileName}
