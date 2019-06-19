@@ -4,6 +4,7 @@ import PDEReader from './Components/PDEReader'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faEye } from '@fortawesome/free-solid-svg-icons'
+import Alert from 'react-bootstrap/Alert'
 import Moment from 'react-moment';
 library.add(faEye)
 
@@ -17,6 +18,7 @@ class TAView extends Component {
             fileURL: '',
             items: [],
             viewedFileURL: '',
+            viewdFileName: ''
         }
 
         this.handleLinkClick = this.handleLinkClick.bind(this);
@@ -52,9 +54,10 @@ class TAView extends Component {
     }
 
     // This state change is passed to the PDEReader
-    handleLinkClick = (e, fileURL) => {
+    handleLinkClick = (e, fileURL, title) => {
         this.setState({
             viewedFileURL: fileURL,
+            viewFileName: title
         })
     }
 
@@ -64,6 +67,11 @@ class TAView extends Component {
                 <div>
                     <h2>Welcome, TA</h2>
                 </div>
+
+                <Alert variant='primary'>
+                    There are {this.state.items.length} new uploads since you last logged in
+                </Alert>
+
 
                 <div>
                     <table className="table table-striped">
@@ -84,14 +92,20 @@ class TAView extends Component {
                                         <td>{item.title}</td>
                                         <td><a href={item.fileURL}>Download link</a></td>
                                         <td><Moment>{item.timestamp}</Moment></td>
-                                        <td><FontAwesomeIcon icon="eye" onClick={(e) => this.handleLinkClick(e, item.fileURL)} /></td>
+                                        <td><FontAwesomeIcon icon="eye" onClick={(e) => this.handleLinkClick(e, item.fileURL, item.title)} /></td>
                                     </tr>)
                             })}
                         </tbody>
                     </table>
                 </div>
 
-                <PDEReader file={this.state.viewedFileURL} />
+                {this.state.viewedFileURL!='' &&
+                            <PDEReader
+                            file={this.state.viewedFileURL}
+                            name={this.state.viewFileName}
+                            type='TA'
+                        />        
+                }
 
             </div>
 

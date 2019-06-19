@@ -8,3 +8,7 @@ body {
 h1, h2, p, ul, li {
     font-family: sans-serif;
   }
+
+.comment-span {
+  margin-left: 5px;
+}

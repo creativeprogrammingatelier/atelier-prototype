@@ -72,8 +72,8 @@ class StudentView extends Component {
     handleUploadSuccess = filename => {
 
         // If a document for this user does not exist yet, create it
-        this.usersRef.set({snum: true}, {merge: true}) 
-    
+        this.usersRef.set({ snum: true }, { merge: true })
+
         this.setState({
             filename: filename,
             progress: 100
@@ -93,9 +93,10 @@ class StudentView extends Component {
     }
 
     // This state change is passed to the PDEReader
-    handleLinkClick = (e, fileURL) => {
+    handleLinkClick = (e, fileURL, title) => {
         this.setState({
             viewedFileURL: fileURL,
+            viewFileName: title
         })
     }
 
@@ -120,6 +121,7 @@ class StudentView extends Component {
                                 <th scope="col">File name</th>
                                 <th scope="col">Download</th>
                                 <th scope="col">Uploaded</th>
+                                <th scope="col">Comments</th>
                                 <th scope="col">View</th>
                             </tr>
                         </thead>
@@ -130,15 +132,21 @@ class StudentView extends Component {
                                         <td>{item.title}</td>
                                         <td><a href={item.fileURL}>Download link</a></td>
                                         <td><Moment>{item.timestamp}</Moment></td>
-                                        <td><FontAwesomeIcon icon="eye" onClick={(e) => this.handleLinkClick(e, item.fileURL)} /></td>
+                                        <td>0</td>
+                                        <td><FontAwesomeIcon icon="eye" onClick={(e) => this.handleLinkClick(e, item.fileURL, item.title)} /></td>
                                     </tr>)
                             })}
                         </tbody>
                     </table>
 
                 </div>
-
-                <PDEReader file={this.state.viewedFileURL} />
+                {this.state.viewedFileURL!='' &&
+                            <PDEReader
+                            file={this.state.viewedFileURL}
+                            name={this.state.viewFileName}
+                            type='student'
+                        />        
+                }
 
             </div>
         )
